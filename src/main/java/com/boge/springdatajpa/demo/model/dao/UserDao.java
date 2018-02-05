@@ -1,6 +1,8 @@
 package com.boge.springdatajpa.demo.model.dao;
 
 import com.boge.springdatajpa.demo.model.entity.User;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+// http://www.jfinal.com/feedback/392
+@CacheConfig(cacheNames = "users")
 public interface UserDao extends JpaRepository<User, Integer>, JpaSpecificationExecutor {
 
     // 接口规范方法名查询
@@ -19,6 +23,7 @@ public interface UserDao extends JpaRepository<User, Integer>, JpaSpecificationE
     User findByNameAndTel(String name, String tel);
 
     //使用JPA的NamedQueries
+    @Cacheable(key = "#p0")
     List<User> findById(Integer id);
 
     //模糊查询：http://blog.csdn.net/zhouyingge1104/article/details/50596360g

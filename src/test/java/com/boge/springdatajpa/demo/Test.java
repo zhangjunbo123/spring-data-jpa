@@ -42,7 +42,7 @@ public class Test {
 
     @org.junit.Test
     public void getUsersById() {
-        System.out.println(userService.getUsersById(2));
+        System.out.println(userService.getUsersById(3));
     }
 
     @org.junit.Test

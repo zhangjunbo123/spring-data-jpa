@@ -3,13 +3,14 @@ package com.boge.springdatajpa.demo.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 //注意：这里必须使用User.，不然不会识别
 //这个就是JPQL查询，由@NamedQuery定义，其特征与原生SQL语句类似，并且完全面向对象，通过类名和属性访问，而不是表名和表的属性。
-@NamedQuery(name = "User.findById", query = "select u from User u where u.id >= ?1")
-public class User {
+/*@NamedQuery(name = "User.findById", query = "select u from User u where u.id >= ?1")*/
+public class User implements Serializable {
     private int id;
     private String name;
     private String password;
