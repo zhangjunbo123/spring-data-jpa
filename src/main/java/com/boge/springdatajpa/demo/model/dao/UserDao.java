@@ -23,6 +23,7 @@ public interface UserDao extends JpaRepository<User, Integer>, JpaSpecificationE
     User findByNameAndTel(String name, String tel);
 
     //使用JPA的NamedQueries
+    // redis
     @Cacheable(key = "#p0")
     List<User> findById(Integer id);
 

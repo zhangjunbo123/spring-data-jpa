@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -14,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +30,21 @@ public class RedisConfig extends CachingConfigurerSupport {
 //    private String timeout;
 
     // 自定义缓存key生成策略
+    @Bean
+    public KeyGenerator keyGenerator() {
+        return new KeyGenerator() {
+            @Override
+            public Object generate(Object o, Method method, Object... objects) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(o.getClass().getName());
+                sb.append(method.getName());
+                for (Object obj : objects) {
+                    sb.append(obj.toString());
+                }
+                return sb.toString();
+            }
+        };
+    }
 
     // 缓存管理器
     @Bean
@@ -37,7 +54,8 @@ public class RedisConfig extends CachingConfigurerSupport {
         redisCacheManager.setDefaultExpiration(10000);
         // 设置value的过期时间
         Map<String, Long> map = new HashMap<>();
-//        map.put("users", 60L);
+        //键为cacheNames
+        map.put("users", 10L);
         System.out.println("设置过期时间...");
         redisCacheManager.setExpires(map);
         return redisCacheManager;
